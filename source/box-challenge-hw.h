@@ -17,26 +17,9 @@
 #ifndef __UVISOR_HELLOWORLD_BOX_CHALLENGE_HW_H__
 #define __UVISOR_HELLOWORLD_BOX_CHALLENGE_HW_H__
 
-/* Target Specifc ACLs */
-#if   defined(TARGET_LIKE_FRDM_K64F)
-
 #define BOX_CHALLENGE_ACL(acl_list_name) \
     static const UvisorBoxAclItem acl_list_name[] = {   \
         {RNG,   sizeof(*RNG),   UVISOR_TACLDEF_PERIPH}  \
     }
 
-#elif defined(TARGET_LIKE_STM32F429I_DISCO)
-
-#define BOX_CHALLENGE_ACL(acl_list_name) \
-    static const UvisorBoxAclItem acl_list_name[] = {   \
-        {RNG,   sizeof(*RNG),   UVISOR_TACLDEF_PERIPH}  \
-    }
-
-#else
-
-#define BOX_CHALLENGE_ACL(acl_list_name) \
-    static const UvisorBoxAclItem acl_list_name[] = {}
-
-#endif
-
-#endif/*__UVISOR_HELLOWORLD_BOX_CHALLENGE_HW_H__*/
+#endif /*__UVISOR_HELLOWORLD_BOX_CHALLENGE_HW_H__ */

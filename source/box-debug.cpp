@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "mbed-drivers/mbed.h"
 #include "uvisor-lib/uvisor-lib.h"
+#include "mbed.h"
 #include "box-debug.h"
 #include "main-hw.h"
 
@@ -45,7 +45,7 @@ static void halt_error(int reason)
     int volatile j;
     static DigitalOut halt_led(HALT_LED);
 
-    pc.printf("Access denied! Will now reboot\r\n");
+    printf("Access denied! Will now reboot\r\n");
 
     halt_led = LED_OFF;
     for (k = 0; k < 3; k++) {
