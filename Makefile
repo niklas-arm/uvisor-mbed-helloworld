@@ -43,9 +43,12 @@ include Makefile.scripts
 # Read uVisor symbols.
 GDB_DEBUG_UVISOR:=add-symbol-file $(UVISOR_ELF) uvisor_init
 
-.PHONY: all build gdbserver gdb
+.PHONY: all clean build gdbserver gdb
 
 all: gdb
+
+clean:
+	rm -rf .build
 
 $(TARGET_BIN):
 	neo.py compile -o "debug-info" -t GCC_ARM -m K64F -j 0
