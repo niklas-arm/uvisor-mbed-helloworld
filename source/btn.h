@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015, ARM Limited, All Rights Reserved
+ * Copyright (c) 2013-2016, ARM Limited, All Rights Reserved
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,4 +19,4 @@
 
 void btn_init(void);
 
-#endif/*__UVISOR_HELLOWORLD_BTN_H__*/
+#endif /* __UVISOR_HELLOWORLD_BTN_H__ */

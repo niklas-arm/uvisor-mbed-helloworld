@@ -23,4 +23,4 @@ extern bool challenge_verify(const uint8_t *secret, int len);
 extern void challenge_init(void);
 extern void *g_box_context;
 
-#endif/*__UVISOR_HELLOWORLD_BOX_CHALLENGE_H__*/
+#endif /* __UVISOR_HELLOWORLD_BOX_CHALLENGE_H__ */

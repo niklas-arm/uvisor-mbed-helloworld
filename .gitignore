@@ -1,1 +1,5 @@
 .DS_Store
+.build
+gdb.script
+*.sw*
+mbed_settings.py*

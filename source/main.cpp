@@ -14,16 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "mbed-drivers/mbed.h"
-#include "minar/minar.h"
-#include "core-util/FunctionPointer.h"
 #include "uvisor-lib/uvisor-lib.h"
+#include "mbed.h"
 #include "main-hw.h"
 #include "box-challenge.h"
 #include "box-debug.h"
 #include "btn.h"
-
-using mbed::util::FunctionPointer0;
 
 /* Create ACLs for main box. */
 MAIN_ACL(g_main_acl);
@@ -32,41 +28,29 @@ MAIN_ACL(g_main_acl);
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
 
 DigitalOut led(MAIN_LED);
-Serial pc(STDIO_UART_TX, STDIO_UART_RX);
 
 uint8_t g_challenge[CHALLENGE_SIZE];
-minar::Scheduler *g_scheduler;
-minar::callback_handle_t g_event = NULL;
 
 static void toggle_led(void)
 {
     led = !led;
 }
 
-static void retry_secret(void)
+static bool retry_secret(void)
 {
     /* Check the secret. */
-    pc.printf("Verifying secret... ");
+    printf("Verifying secret... ");
     bool verified = challenge_verify(g_challenge, sizeof(g_challenge));
-    pc.printf("%s\r\n", verified ? "Match" : "Mismatch");
+    printf("%s\r\n", verified ? "Match" : "Mismatch");
 
-    /* Cancel the previous event for LED blinking. */
-    g_scheduler->cancelCallback(g_event);
-
-    /* Schedule the new LED blinking pattern. */
-    /* The blinking frequency will be faster if the secret has been verified. */
-    g_event = minar::Scheduler::postCallback(FunctionPointer0<void>(toggle_led).bind())
-                .period(minar::milliseconds(verified ? 100 : 500))
-                .tolerance(minar::milliseconds(1))
-                .getHandle();
+    return verified;
 }
 
-void app_start(int, char *[])
+int main(void)
 {
-    /* Set the console baud-rate. */
-    pc.baud(115200);
+    bool verified;
 
-    pc.printf("\r\n***** uvisor-helloworld example *****\r\n");
+    printf("\r\n***** uvisor-helloworld example *****\r\n");
 
     /* Initialize the debug box. */
     box_debug::init();
@@ -83,13 +67,20 @@ void app_start(int, char *[])
     /* Configure the pushbutton. */
     btn_init();
 
-    /* Get a handle to the scheduler. */
-    g_scheduler = minar::Scheduler::instance();
+    printf("Main unprivileged box configured\r\n");
 
-    /* Schedule an event to periodically check for the secret. */
-    minar::Scheduler::postCallback(FunctionPointer0<void>(retry_secret).bind())
-        .period(minar::milliseconds(1000))
-        .tolerance(minar::milliseconds(100));
+    while (1) {
+        verified = retry_secret();
+        if (verified) {
+            while (1) {
+                toggle_led();
+                wait(0.1);
+            }
+        } else {
+            toggle_led();
+            wait(0.5);
+        }
+    }
 
-    pc.printf("Main unprivileged box configured\r\n");
+    return 0;
 }
