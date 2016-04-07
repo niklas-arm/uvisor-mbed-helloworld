@@ -24,6 +24,9 @@ PREFIX:=arm-none-eabi-
 GDB:=$(PREFIX)gdb
 OBJDUMP:=$(PREFIX)objdump
 
+MBED_TARGET:=K64F
+MBED_TOOLCHAIN:=GCC_ARM
+
 # JLink settings
 JLINK:=$(SEGGER)JLinkExe
 JLINK_CFG:=-Device $(CPU) -if SWD
@@ -33,7 +36,7 @@ DEBUG_HOST:=localhost:2331
 
 # Paths
 UVISOR_ELF:=$(wildcard ./mbed-os/core/uvisor-mbed-lib/deploy/TARGET_IGNORE/uvisor/platform/kinetis/debug/*.elf)
-TARGET:=./.build/$(APP)
+TARGET:=./.build/$(MBED_TARGET)/$(MBED_TOOLCHAIN)/$(APP)
 TARGET_ELF:=$(TARGET).elf
 TARGET_BIN:=$(TARGET).bin
 
@@ -50,10 +53,14 @@ all: $(TARGET_BIN)
 clean:
 	rm -rf .build
 
+install: $(TARGET_BIN)
+	cp $^ /Volumes/DAPLINK/firmware.bin && sync
+
+
 build: $(TARGET_BIN)
 
 $(TARGET_BIN):
-	neo.py compile -o "debug-info" -t GCC_ARM -m K64F -j 0
+	neo.py compile -o "debug-info" -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0
 
 gdbserver:
 	$(JLINK_SERVER) $(JLINK_CFG)
