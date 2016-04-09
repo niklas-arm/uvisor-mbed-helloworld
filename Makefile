@@ -40,6 +40,20 @@ TARGET:=./.build/$(MBED_TARGET)/$(MBED_TOOLCHAIN)/$(APP)
 TARGET_ELF:=$(TARGET).elf
 TARGET_BIN:=$(TARGET).bin
 
+FW_DET:=MBED.HTM
+FW_DIR:=$(wildcard /Volumes/*/$(FW_DET))
+ifeq ("$(wildcard $(FW_DIR))","")
+	FW_DIR:=$(wildcard /run/media/$(USER)/*/$(FW_DET))
+endif
+ifeq ("$(wildcard $(FW_DIR))","")
+	FW_DIR:=$(wildcard /var/run/media/$(USER)/*/$(FW_DET))
+endif
+ifeq ("$(wildcard $(FW_DIR))","")
+	FW_DIR:=./
+else
+	FW_DIR:=$(dir $(firstword $(FW_DIR)))
+endif
+
 # GDB scripts
 include Makefile.scripts
 
@@ -54,8 +68,8 @@ clean:
 	rm -rf .build
 
 install: $(TARGET_BIN)
-	cp $^ /Volumes/DAPLINK/firmware.bin && sync
-
+	cp $^ $(FW_DIR)firmware.bin
+	sync
 
 build: $(TARGET_BIN)
 
