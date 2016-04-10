@@ -4,3 +4,4 @@ gdb.script
 *.sw*
 mbed_settings.py*
 /mbed-os/
+/firmware.*

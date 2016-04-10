@@ -27,18 +27,24 @@ OBJDUMP:=$(PREFIX)objdump
 MBED_TARGET:=K64F
 MBED_TOOLCHAIN:=GCC_ARM
 
+# set JLINK CPU based on ARCH
+ifeq ("$(MBED_TARGET)","K64F")
+	CPU:=MK64FN1M0XXX12
+else
+	CPU:=UNKNOWN
+endif
+
 # JLink settings
 JLINK:=$(SEGGER)JLinkExe
 JLINK_CFG:=-Device $(CPU) -if SWD
-CPU="MK64FN1M0XXX12"
 JLINK_SERVER:=$(SEGGER)JLinkGDBServer
 DEBUG_HOST:=localhost:2331
 
 # Paths
-UVISOR_ELF:=$(wildcard ./mbed-os/core/uvisor-mbed-lib/deploy/TARGET_IGNORE/uvisor/platform/kinetis/debug/*.elf)
 TARGET:=./.build/$(MBED_TARGET)/$(MBED_TOOLCHAIN)/$(APP)
 TARGET_ELF:=$(TARGET).elf
 TARGET_BIN:=$(TARGET).bin
+TARGET_ASM:=$(TARGET).asm
 
 FW_DET:=MBED.HTM
 FW_DIR:=$(wildcard /Volumes/*/$(FW_DET))
@@ -58,14 +64,17 @@ endif
 include Makefile.scripts
 
 # Read uVisor symbols.
+UVISOR_LIB:=mbed-os/core/uvisor-mbed-lib
+UVISOR_ELF:=$(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/debug/configuration_kinetis_m4_0x1fff0000.elf
 GDB_DEBUG_UVISOR:=add-symbol-file $(UVISOR_ELF) uvisor_init
 
-.PHONY: all clean build debug gdbserver
+.PHONY: all clean build objdump debug gdbserver
 
 all: $(TARGET_BIN)
 
 clean:
-	rm -rf .build
+	rm -rf .build gdb.script
+	make -C $(UVISOR_LIB) clean
 
 install: $(TARGET_BIN)
 	cp $^ $(FW_DIR)firmware.bin
@@ -73,14 +82,22 @@ install: $(TARGET_BIN)
 
 build: $(TARGET_BIN)
 
-$(TARGET_BIN):
+$(TARGET_BIN): $(UVISOR_ELF)
 	neo.py compile -o "debug-info" -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0
+
+objdump: $(TARGET_ASM)
+
+$(TARGET_ASM): $(TARGET_ELF)
+	$(OBJDUMP) -d $^ > $@
 
 gdbserver:
 	$(JLINK_SERVER) $(JLINK_CFG)
 
-debug: gdb.script $(TARGET_BIN)
-	$(GDB) -x $<
+$(UVISOR_ELF):
+	make -C $(UVISOR_LIB) all
+
+debug: gdb.script $(UVISOR_ELF) $(TARGET_BIN)
+	$(GDB) -tui -x $<
 
 gdb.script:
 	@echo "$$__SCRIPT_GDB" > $@
