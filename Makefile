@@ -66,24 +66,26 @@ include Makefile.scripts
 # Read uVisor symbols.
 UVISOR_LIB:=mbed-os/core/uvisor-mbed-lib
 UVISOR_ELF:=$(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/debug/configuration_kinetis_m4_0x1fff0000.elf
-GDB_DEBUG_UVISOR:=add-symbol-file $(UVISOR_ELF) uvisor_init
+ifeq ("$(wildcard $(UVISOR_ELF))","")
+	GDB_DEBUG_UVISOR:=add-symbol-file $(UVISOR_ELF) uvisor_init
+endif
 
-.PHONY: all clean build objdump debug gdbserver
+.PHONY: all clean uvisor_clean debug release uvisor debug gdbserver
 
-all: $(TARGET_BIN)
+all: release install
 
 clean:
 	rm -rf .build gdb.script
-	make -C $(UVISOR_LIB) clean
 
 install: $(TARGET_BIN)
 	cp $^ $(FW_DIR)firmware.bin
 	sync
 
-build: $(TARGET_BIN)
+debug:
+	neo.py compile -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0 $(NEO) -o "debug-info"
 
-$(TARGET_BIN): $(UVISOR_ELF)
-	neo.py compile -o "debug-info" -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0
+release:
+	neo.py compile -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0 $(NEO)
 
 objdump: $(TARGET_ASM)
 
@@ -93,10 +95,15 @@ $(TARGET_ASM): $(TARGET_ELF)
 gdbserver:
 	$(JLINK_SERVER) $(JLINK_CFG)
 
+uvisor_clean: clean
+	make -C $(UVISOR_LIB) clean
+
+uvisor: $(UVISOR_ELF)
+
 $(UVISOR_ELF):
 	make -C $(UVISOR_LIB) all
 
-debug: gdb.script $(UVISOR_ELF) $(TARGET_BIN)
+gdb: gdb.script $(UVISOR_ELF) debug
 	$(GDB) -tui -x $<
 
 gdb.script:
