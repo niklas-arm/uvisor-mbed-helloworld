@@ -46,13 +46,26 @@ TARGET_ELF:=$(TARGET).elf
 TARGET_BIN:=$(TARGET).bin
 TARGET_ASM:=$(TARGET).asm
 
-FW_DET:=MBED.HTM
-FW_DIR:=$(wildcard /Volumes/*/$(FW_DET))
-ifeq ("$(wildcard $(FW_DIR))","")
-	FW_DIR:=$(wildcard /run/media/$(USER)/*/$(FW_DET))
+# detect SEGGER JLINK mass storages
+SEGGER_DET:=Segger.html
+FW_DIR:=$(wildcard /Volumes/JLINK/$(FW_DET))
+ifeq ("$(wildcard $(SEGGER_DIR))","")
+	FW_DIR:=$(wildcard /run/media/$(USER)/JLINK/$(FW_DET))
 endif
 ifeq ("$(wildcard $(FW_DIR))","")
-	FW_DIR:=$(wildcard /var/run/media/$(USER)/*/$(FW_DET))
+	FW_DIR:=$(wildcard /var/run/media/$(USER)/JLINK/$(FW_DET))
+endif
+
+# detect mbed DAPLINK mass storages
+MBED_DET:=MBED.HTM
+ifeq ("$(wildcard $(FW_DIR))","")
+	FW_DIR:=$(wildcard /Volumes/*/$(MBED_DET))
+endif
+ifeq ("$(wildcard $(FW_DIR))","")
+	FW_DIR:=$(wildcard /run/media/$(USER)/*/$(MBED_DET))
+endif
+ifeq ("$(wildcard $(FW_DIR))","")
+	FW_DIR:=$(wildcard /var/run/media/$(USER)/*/$(MBED_DET))
 endif
 ifeq ("$(wildcard $(FW_DIR))","")
 	FW_DIR:=./
@@ -75,7 +88,7 @@ endif
 all: release install
 
 clean:
-	rm -rf .build gdb.script
+	rm -rf .build gdb.script firmware.asm firmware.bin
 
 install: $(TARGET_BIN)
 	cp $^ $(FW_DIR)firmware.bin
