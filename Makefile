@@ -74,14 +74,14 @@ else
 	FW_DIR:=$(dir $(firstword $(FW_DIR)))
 endif
 
-# GDB scripts
-include Makefile.scripts
-
 # Read uVisor symbols.
 UVISOR_LIB:=mbed-os/core/uvisor-mbed-lib
 GDB_DEBUG_UVISOR=add-symbol-file $(DEBUG_ELF) uvisor_init
 
-.PHONY: all clean uvisor_clean debug release uvisor debug gdbserver
+# GDB scripts
+include Makefile.scripts
+
+.PHONY: all clean uvusir_clean debug release uvisor debug gdbserver gdb.script
 
 all: release install
 
@@ -110,6 +110,10 @@ gdbserver:
 
 uvisor:
 	make -C $(UVISOR_LIB) clean all
+
+uvisor_clean:
+	make -C $(UVISOR_LIB) clean
+	 git -C $(UVISOR_LIB) reset --hard
 
 gdb: gdb.script debug
 	$(GDB) -tui -x $<

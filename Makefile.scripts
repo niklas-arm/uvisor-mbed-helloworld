@@ -31,6 +31,7 @@ define __SCRIPT_GDB
 	monitor flash device = $(CPU)
 	load $(TARGET_ELF)
 	file $(TARGET_ELF)
+	dir $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor
 	$(GDB_DEBUG_UVISOR)
 	b uvisor_init
 endef
