@@ -32,6 +32,7 @@ define __SCRIPT_GDB
 	load $(TARGET_ELF)
 	file $(TARGET_ELF)
 	$(GDB_DEBUG_UVISOR)
+	b uvisor_init
 endef
 export __SCRIPT_GDB
 

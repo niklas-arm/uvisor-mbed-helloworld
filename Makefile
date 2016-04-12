@@ -45,6 +45,7 @@ TARGET:=./.build/$(MBED_TARGET)/$(MBED_TOOLCHAIN)/$(APP)
 TARGET_ELF:=$(TARGET).elf
 TARGET_BIN:=$(TARGET).bin
 TARGET_ASM:=$(TARGET).asm
+DEBUG_ELF:=debug.elf
 
 # detect SEGGER JLINK mass storages
 SEGGER_DET:=Segger.html
@@ -78,26 +79,25 @@ include Makefile.scripts
 
 # Read uVisor symbols.
 UVISOR_LIB:=mbed-os/core/uvisor-mbed-lib
-UVISOR_ELF:=$(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/debug/configuration_kinetis_m4_0x1fff0000.elf
-ifeq ("$(wildcard $(UVISOR_ELF))","")
-	GDB_DEBUG_UVISOR:=add-symbol-file $(UVISOR_ELF) uvisor_init
-endif
+GDB_DEBUG_UVISOR=add-symbol-file $(DEBUG_ELF) uvisor_init
 
 .PHONY: all clean uvisor_clean debug release uvisor debug gdbserver
 
 all: release install
 
 clean:
-	rm -rf .build gdb.script firmware.asm firmware.bin
+	rm -rf .build gdb.script $(DEBUG_ELF) firmware.asm firmware.bin
 
 install: $(TARGET_BIN)
 	cp $^ $(FW_DIR)firmware.bin
 	sync
 
 debug:
+	cp $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/debug/configuration_kinetis_m4_0x1fff0000.elf $(DEBUG_ELF)
 	neo.py compile -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0 $(NEO) -o "debug-info"
 
 release:
+	cp $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/release/configuration_kinetis_m4_0x1fff0000.elf $(DEBUG_ELF)
 	neo.py compile -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0 $(NEO)
 
 objdump: $(TARGET_ASM)
@@ -108,15 +108,10 @@ $(TARGET_ASM): $(TARGET_ELF)
 gdbserver:
 	$(JLINK_SERVER) $(JLINK_CFG)
 
-uvisor_clean: clean
-	make -C $(UVISOR_LIB) clean
+uvisor:
+	make -C $(UVISOR_LIB) clean all
 
-uvisor: $(UVISOR_ELF)
-
-$(UVISOR_ELF):
-	make -C $(UVISOR_LIB) all
-
-gdb: gdb.script $(UVISOR_ELF) debug
+gdb: gdb.script debug
 	$(GDB) -tui -x $<
 
 gdb.script:

@@ -5,3 +5,4 @@ gdb.script
 mbed_settings.py*
 /mbed-os/
 /firmware.*
+/debug.elf
