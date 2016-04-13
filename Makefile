@@ -81,7 +81,7 @@ GDB_DEBUG_UVISOR=add-symbol-file $(DEBUG_ELF) uvisor_init
 # GDB scripts
 include Makefile.scripts
 
-.PHONY: all clean uvusir_clean debug release uvisor debug gdbserver gdb.script
+.PHONY: all clean uvisor_clean debug release uvisor debug gdbserver gdb.script
 
 all: release install
 
