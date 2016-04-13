@@ -37,6 +37,7 @@ extern uint8_t g_challenge[CHALLENGE_SIZE];
         {SIM,    sizeof(*SIM),    UVISOR_TACLDEF_PERIPH}, \
         {PORTB,  sizeof(*PORTB),  UVISOR_TACLDEF_PERIPH}, \
         {PORTC,  sizeof(*PORTC),  UVISOR_TACLDEF_PERIPH}, \
+        {PORTE,  sizeof(*PORTE),  UVISOR_TACLDEF_PERIPH}, \
         {RTC,    sizeof(*RTC),    UVISOR_TACLDEF_PERIPH}, \
         {LPTMR0, sizeof(*LPTMR0), UVISOR_TACLDEF_PERIPH}, \
         {PIT,    sizeof(*PIT),    UVISOR_TACLDEF_PERIPH}, \
