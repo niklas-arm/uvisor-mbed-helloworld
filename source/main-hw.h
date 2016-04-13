@@ -43,6 +43,7 @@ extern uint8_t g_challenge[CHALLENGE_SIZE];
         {PIT,    sizeof(*PIT),    UVISOR_TACLDEF_PERIPH}, \
         {SMC,    sizeof(*SMC),    UVISOR_TACLDEF_PERIPH}, \
         {UART0,  sizeof(*UART0),  UVISOR_TACLDEF_PERIPH}, \
+        {I2C0,   sizeof(*I2C0),   UVISOR_TACLDEF_PERIPH}, \
     }
 
 #endif /* __UVISOR_HELLOWORLD_MAIN_HW_H__ */
