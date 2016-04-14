@@ -63,9 +63,9 @@ int main(void)
 {
     printf("\r\n***** stupid uvisor-rtos example *****\r\n");
 
-    Thread led1_thread(led1_main);
-    Thread led2_thread(led2_main);
-    Thread led3_thread(led3_main);
+    Thread led1_thread(led1_main, NULL, osPriorityAboveNormal);
+    Thread led2_thread(led2_main, NULL, osPriorityAboveNormal);
+    Thread led3_thread(led3_main, NULL, osPriorityAboveNormal);
 
     while (1);
 
