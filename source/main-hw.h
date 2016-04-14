@@ -35,8 +35,10 @@ extern uint8_t g_challenge[CHALLENGE_SIZE];
     static const UvisorBoxAclItem acl_list_name[] = {     \
         {MCG,    sizeof(*MCG),    UVISOR_TACLDEF_PERIPH}, \
         {SIM,    sizeof(*SIM),    UVISOR_TACLDEF_PERIPH}, \
+        {PORTA,  sizeof(*PORTA),  UVISOR_TACLDEF_PERIPH}, \
         {PORTB,  sizeof(*PORTB),  UVISOR_TACLDEF_PERIPH}, \
         {PORTC,  sizeof(*PORTC),  UVISOR_TACLDEF_PERIPH}, \
+        {PORTD,  sizeof(*PORTD),  UVISOR_TACLDEF_PERIPH}, \
         {PORTE,  sizeof(*PORTE),  UVISOR_TACLDEF_PERIPH}, \
         {RTC,    sizeof(*RTC),    UVISOR_TACLDEF_PERIPH}, \
         {LPTMR0, sizeof(*LPTMR0), UVISOR_TACLDEF_PERIPH}, \
@@ -44,6 +46,7 @@ extern uint8_t g_challenge[CHALLENGE_SIZE];
         {SMC,    sizeof(*SMC),    UVISOR_TACLDEF_PERIPH}, \
         {UART0,  sizeof(*UART0),  UVISOR_TACLDEF_PERIPH}, \
         {I2C0,   sizeof(*I2C0),   UVISOR_TACLDEF_PERIPH}, \
+        {SPI0,   sizeof(*SPI0),   UVISOR_TACLDEF_PERIPH}, \
     }
 
 #endif /* __UVISOR_HELLOWORLD_MAIN_HW_H__ */
