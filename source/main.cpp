@@ -16,10 +16,8 @@
  */
 #include "uvisor-lib/uvisor-lib.h"
 #include "mbed.h"
+#include "rtos.h"
 #include "main-hw.h"
-#include "box-challenge.h"
-#include "box-debug.h"
-#include "btn.h"
 
 /* Create ACLs for main box. */
 MAIN_ACL(g_main_acl);
@@ -27,60 +25,49 @@ MAIN_ACL(g_main_acl);
 /* Enable uVisor. */
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
 
-DigitalOut led(MAIN_LED);
+DigitalOut led1(LED1);
+DigitalOut led2(LED2);
+DigitalOut led3(LED3);
 
-uint8_t g_challenge[CHALLENGE_SIZE];
-
-static void toggle_led(void)
+void led1_main(const void *)
 {
-    led = !led;
+    led1 = LED_OFF;
+
+    while (1) {
+        led1 = !led1;
+        Thread::wait(200);
+    }
 }
 
-static bool retry_secret(void)
+void led2_main(const void *)
 {
-    /* Check the secret. */
-    printf("Verifying secret... ");
-    bool verified = challenge_verify(g_challenge, sizeof(g_challenge));
-    printf("%s\r\n", verified ? "Match" : "Mismatch");
+    led2 = LED_OFF;
 
-    return verified;
+    while (1) {
+        led2 = !led2;
+        Thread::wait(300);
+    }
+}
+
+void led3_main(const void *)
+{
+    led3 = LED_OFF;
+
+    while (1) {
+        led3 = !led3;
+        Thread::wait(500);
+    }
 }
 
 int main(void)
 {
-    bool verified;
+    printf("\r\n***** stupid uvisor-rtos example *****\r\n");
 
-    printf("\r\n***** uvisor-helloworld example *****\r\n");
+    Thread led1_thread(led1_main);
+    Thread led2_thread(led2_main);
+    Thread led3_thread(led3_main);
 
-    /* Initialize the debug box. */
-    box_debug::init();
-
-    /* Reset the challenge. */
-    memset(&g_challenge, 0, sizeof(g_challenge));
-
-    /* Turn the LED off. */
-    led = LED_OFF;
-
-    /* Initialize the challenge. */
-    challenge_init();
-
-    /* Configure the pushbutton. */
-    btn_init();
-
-    printf("Main unprivileged box configured\r\n");
-
-    while (1) {
-        verified = retry_secret();
-        if (verified) {
-            while (1) {
-                toggle_led();
-                wait(0.1);
-            }
-        } else {
-            toggle_led();
-            wait(0.5);
-        }
-    }
+    while (1);
 
     return 0;
 }
