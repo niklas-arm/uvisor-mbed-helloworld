@@ -100,6 +100,9 @@ int main(void)
     /* free 1 page */
     uvisor_page_free((UvisorPageTable*)&request[3]);
 
+    UvisorAllocator thread_allocator = uvisor_allocator_create_with_pages(40*kB, 8*kB);
+    uint16_t *mem = (uint16_t*)uvisor_malloc(thread_allocator, 1360);
+
     /* Initialize the debug box. */
     box_debug::init();
 
