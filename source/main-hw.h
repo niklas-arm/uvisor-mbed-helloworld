@@ -19,8 +19,6 @@
 
 /* The vector containing the challenge is shared with the push-button ISR, so
  * that it can attempt to access it from an IRQ context. */
-#include "box-challenge.h"
-extern uint8_t g_challenge[CHALLENGE_SIZE];
 
 #define LED_ON  false
 #define LED_OFF true
