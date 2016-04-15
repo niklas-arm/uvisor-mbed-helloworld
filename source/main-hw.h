@@ -49,7 +49,4 @@ extern uint8_t g_challenge[CHALLENGE_SIZE];
         {SPI0,   sizeof(*SPI0),   UVISOR_TACLDEF_PERIPH}, \
     }
 
-        //{(void *)0x42000000, 0x100000, UVISOR_TACLDEF_DATA}, \
-// {PIT,    sizeof(*PIT),    UVISOR_TACLDEF_PERIPH}, \
-
 #endif /* __UVISOR_HELLOWORLD_MAIN_HW_H__ */
