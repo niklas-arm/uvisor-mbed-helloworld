@@ -93,12 +93,12 @@ install: $(TARGET_BIN)
 	sync
 
 debug:
-	cp $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/debug/configuration_kinetis_m4_0x1fff0000.elf $(DEBUG_ELF)
-	neo.py compile -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0 $(NEO) -o "debug-info"
+#	cp $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/debug/configuration_kinetis_m4_0x1fff0000.elf $(DEBUG_ELF)
+	mbed compile -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0 $(NEO) -o "debug-info"
 
 release:
-	cp $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/release/configuration_kinetis_m4_0x1fff0000.elf $(DEBUG_ELF)
-	neo.py compile -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0 $(NEO)
+#	cp $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor/platform/kinetis/release/configuration_kinetis_m4_0x1fff0000.elf $(DEBUG_ELF)
+	mbed compile -t $(MBED_TOOLCHAIN) -m $(MBED_TARGET) -j 0 $(NEO)
 
 objdump: $(TARGET_ASM)
 

@@ -21,6 +21,8 @@
 # inline debugging/flashing scripts
 #
 define __SCRIPT_GDB
+	layout split
+	focus cmd
 	target remote $(DEBUG_HOST)
 	monitor endian little
 	monitor reset
@@ -32,8 +34,8 @@ define __SCRIPT_GDB
 	load $(TARGET_ELF)
 	file $(TARGET_ELF)
 	dir $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor
-	$(GDB_DEBUG_UVISOR)
 	b uvisor_init
+	watch __uvisor_ps
 endef
 export __SCRIPT_GDB
 
