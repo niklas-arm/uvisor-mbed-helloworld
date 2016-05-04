@@ -11,6 +11,7 @@ static const UvisorBoxAclItem acl[] = {
 };
 
 UVISOR_BOX_NAMESPACE(NULL);
+UVISOR_BOX_HEAPSIZE(1024);
 UVISOR_BOX_CONFIG(box_led3, acl, UVISOR_BOX_STACK_SIZE, box_context);
 
 static void led3_main(const void *)
