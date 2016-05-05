@@ -58,7 +58,7 @@ int main(void)
     printf("\r\n***** stupid uvisor-rtos example *****\r\n");
 
     // Thread led_blinker_thread(led_blinker);
-    HeapThread led_blinker_thread(led_blinker, 40*1024, 8*1024);
+    BaseThread led_blinker_thread(led_blinker, 40*1024, 8*1024);
     led_blinker_thread.start(osPriorityHigh);
 
     led1_init();
