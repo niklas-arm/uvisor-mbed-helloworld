@@ -50,6 +50,14 @@ void led_blinker(const void *)
     }
 }
 
+void malloc_battle(const void*)
+{
+    while(1) {
+        void *ptr = malloc_p(rand() % 10000);
+        free_p(ptr);
+    }
+}
+
 int main(void)
 {
     extern serial_t stdio_uart;
@@ -60,6 +68,9 @@ int main(void)
     // Thread led_blinker_thread(led_blinker);
     BaseThread led_blinker_thread(led_blinker, 40*1024, 8*1024);
     led_blinker_thread.start(osPriorityHigh);
+
+    Thread mthread(malloc_battle);
+    Thread mthread2(malloc_battle);
 
     led1_init();
     led2_init();
