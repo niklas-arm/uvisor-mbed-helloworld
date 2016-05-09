@@ -28,15 +28,23 @@ MAIN_ACL(g_main_acl);
 /* Enable uVisor. */
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
 
+static void init_boxes(void)
+{
+    led1_init();
+    led2_init();
+    led3_init();
+}
+
 int main(void)
 {
     printf("\r\n***** stupid uvisor-rtos example *****\r\n");
 
-    led1_init();
-    led2_init();
-    led3_init();
+    /* This will go away when uVisor has the box init feature. */
+    init_boxes();
 
-    while (1);
+    while (1) {
+        osDelay(10000);
+    }
 
     return 0;
 }

@@ -20,8 +20,8 @@
 /* The vector containing the challenge is shared with the push-button ISR, so
  * that it can attempt to access it from an IRQ context. */
 
-#define LED_ON  false
-#define LED_OFF true
+#define LED_ON  true
+#define LED_OFF false
 
 #define MAIN_LED LED_BLUE
 #define HALT_LED LED_RED
