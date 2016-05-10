@@ -25,6 +25,10 @@ static void led2_main(const void *)
     }
 }
 
+/*
+ * The *_init functions will look different when uVisor has the box init
+ * feature.
+ */
 UVISOR_EXTERN void __led2_init(void)
 {
     uvisor_ctx->thread = new Thread(led2_main, NULL, osPriorityBelowNormal);
