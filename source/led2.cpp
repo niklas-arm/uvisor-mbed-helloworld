@@ -5,6 +5,7 @@
 
 struct box_context {
     Thread *thread;
+    uint32_t heartbeat;
 };
 
 static const UvisorBoxAclItem acl[] = {
@@ -21,6 +22,7 @@ static void led2_main(const void *)
 
     while (1) {
         led2 = !led2;
+        ++uvisor_ctx->heartbeat;
         Thread::wait(300);
     }
 }
