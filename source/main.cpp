@@ -28,7 +28,9 @@ MAIN_ACL(g_main_acl);
 /* Enable uVisor. */
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
 
-static void init_boxes(void)
+/* This will go away when uVisor has a main thread for each box. */
+/* This is called before scheduler is started. */
+extern "C" void init_boxes(void)
 {
     led1_init();
     led2_init();
@@ -38,9 +40,6 @@ static void init_boxes(void)
 int main(void)
 {
     printf("\r\n***** stupid uvisor-rtos example *****\r\n");
-
-    /* This will go away when uVisor has the box init feature. */
-    init_boxes();
 
     while (1) {
         osDelay(10000);
