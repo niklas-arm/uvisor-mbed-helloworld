@@ -4,17 +4,19 @@
 #include "main-hw.h"
 
 struct box_context {
-    Thread *thread;
 };
 
 static const UvisorBoxAclItem acl[] = {
 };
 
+void led3_main();
+
 UVISOR_BOX_NAMESPACE(NULL);
 UVISOR_BOX_HEAPSIZE(8192);
+UVISOR_BOX_MAIN(led3_main, osPriorityLow);
 UVISOR_BOX_CONFIG(box_led3, acl, UVISOR_BOX_STACK_SIZE, box_context);
 
-static void led3_main(const void *)
+void led3_main()
 {
     DigitalOut led3(LED3);
     led3 = LED_OFF;
@@ -23,18 +25,4 @@ static void led3_main(const void *)
         led3 = !led3;
         Thread::wait(500);
     }
-}
-
-/*
- * The *_init functions will look different when uVisor has the box init
- * feature.
- */
-UVISOR_EXTERN void __led3_init(void)
-{
-    uvisor_ctx->thread = new Thread(led3_main, NULL, osPriorityBelowNormal);
-}
-
-void led3_init(void)
-{
-    secure_gateway(box_led3, __led3_init);
 }

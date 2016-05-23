@@ -28,22 +28,37 @@ MAIN_ACL(g_main_acl);
 /* Enable uVisor. */
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
 
-static void init_boxes(void)
+typedef struct {
+    uint8_t type;
+    uint8_t reserved[3];
+} UvisorBoxAclType;
+
+void led_main(const void *num)
 {
-    led1_init();
-    led2_init();
-    led3_init();
+    DigitalOut led((PinName)((int)num));
+    led = LED_OFF;
+
+    while (1) {
+        led = !led;
+        uint8_t *p = new uint8_t[rand()%500];
+        Thread::wait(200);
+        delete p;
+    }
 }
 
 int main(void)
 {
     printf("\r\n***** stupid uvisor-rtos example *****\r\n");
 
-    /* This will go away when uVisor has the box init feature. */
-    init_boxes();
+    rtos::Thread t(led_main, (void *)LED1);
+    Thread::wait(200);
+    rtos::Thread t2(led_main, (void *)LED2);
 
     while (1) {
+        // osThreadYield();
         osDelay(10000);
+        // int32_t ii = 300000;
+        // while(ii-- > 0) ;
     }
 
     return 0;

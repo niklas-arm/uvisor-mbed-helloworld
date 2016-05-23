@@ -33,7 +33,9 @@ define __SCRIPT_GDB
 	file $(TARGET_ELF)
 	dir $(UVISOR_LIB)/deploy/TARGET_IGNORE/uvisor
 	$(GDB_DEBUG_UVISOR)
-	b uvisor_init
+    focus cmd
+    layout split
+    
 endef
 export __SCRIPT_GDB
 
