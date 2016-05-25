@@ -22,7 +22,7 @@ static void led2_main(const void *)
 
     while (1) {
         led2 = !led2;
-        ++uvisor_ctx->heartbeat;
+        //++uvisor_ctx->heartbeat;
         Thread::wait(300);
     }
 }
